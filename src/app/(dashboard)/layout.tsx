@@ -1,5 +1,7 @@
 import { onLoginUser } from "@/actions/auth";
-import { ChatProvider } from "@/context/use-chat-context";
+import SideBar from "@/components/sidebar";
+import { ChatProvider } from "@/context/user-chat-context";
+
 import { ReactNode } from "react";
 
 type Props = {
@@ -11,7 +13,12 @@ async function OwnerLayout({ children }: Props) {
   if (!authenticated) return null;
   return (
     <ChatProvider>
-      <div className="flex h-screen w-full"></div>
+      <div className="flex h-screen w-full">
+        <SideBar domains={authenticated.domain} />
+        <div className="w-full h-screen flex flex-col py-3 pr-10 pl-20 md:px-10">
+          {children}
+        </div>
+      </div>
     </ChatProvider>
   );
 }

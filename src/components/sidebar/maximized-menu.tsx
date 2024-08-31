@@ -1,9 +1,9 @@
 import { LogOut, Menu, MonitorSmartphone } from "lucide-react";
 import Image from "next/image";
 import React from "react";
+import { SIDE_BAR_MENU } from "@/constants/menu";
 import DomainMenu from "./domain-menu";
 import MenuItem from "./menu-item";
-import { SIDE_BAR_MENU } from "@/constants/menu";
 
 type Props = {
   onExpand(): void;

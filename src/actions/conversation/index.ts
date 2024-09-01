@@ -47,3 +47,75 @@ export const onGetConversationMode = async (id: string) => {
     console.log(error);
   }
 };
+
+export const onGetDomainChatRooms = async (id: string) => {
+  try {
+    const domains = await client.domain.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        customer: {
+          select: {
+            email: true,
+            chatRoom: {
+              select: {
+                createdAt: true,
+                id: true,
+                message: {
+                  select: {
+                    message: true,
+                    createdAt: true,
+                    seen: true,
+                  },
+                  orderBy: {
+                    createdAt: "desc",
+                  },
+                  take: 1,
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (domains) {
+      return domains;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const onGetChatMessages = async (id: string) => {
+  try {
+    const messages = await client.chatRoom.findMany({
+      where: {
+        id,
+      },
+      select: {
+        id: true,
+        live: true,
+        message: {
+          select: {
+            id: true,
+            role: true,
+            message: true,
+            createdAt: true,
+            seen: true,
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
+
+    if (messages) {
+      return messages;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

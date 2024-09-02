@@ -167,6 +167,6 @@ enum Plans {
 }
 
 enum Role {
-  OWNER
-  CUSTOMER
+  user
+  assistant
 }

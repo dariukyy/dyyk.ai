@@ -2,10 +2,12 @@ import {
   onChatBotImageUpdate,
   onCreateFilterQuestions,
   onCreateHelpDeskQuestion,
+  onDeleteHelDeskQuestion,
   onDeleteUserDomain,
   onGetAllFilterQuestions,
   onGetAllHelpDeskQuestions,
   onUpdateDomain,
+  onUpdateHelpDeskQuestion,
   onUpdatePassword,
   onUpdateWelcomeMessage,
 } from "@/actions/settings";
@@ -156,11 +158,13 @@ export const useHelpDesk = (id: string) => {
     resolver: zodResolver(HelpDeskQuestionsSchema),
   });
   const { toast } = useToast();
+  const router = useRouter();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [isQuestions, setIsQuestions] = useState<
     { id: string; question: string; answer: string }[]
   >([]);
+
   const onSubmitQuestion = handleSubmit(async (values) => {
     setLoading(true);
     const question = await onCreateHelpDeskQuestion(
@@ -188,6 +192,55 @@ export const useHelpDesk = (id: string) => {
     }
   };
 
+  const onUpdateQuestion = async (
+    id: string,
+    question: string,
+    answer: string
+  ) => {
+    setLoading(true);
+    const updatedQuestion = await onUpdateHelpDeskQuestion(
+      id,
+      question,
+      answer
+    );
+    if (updatedQuestion) {
+      setIsQuestions((prevQuestions) =>
+        prevQuestions.map((q) =>
+          q.id === id
+            ? {
+                ...q,
+                question: updatedQuestion.question,
+                answer: updatedQuestion.answer,
+              }
+            : q
+        )
+      );
+
+      toast({
+        title: updatedQuestion.status == 200 ? "Success" : "Error",
+        description: updatedQuestion.message,
+      });
+    }
+    setLoading(false);
+  };
+
+  const deleteQuestion = async (id: string, questionId: string) => {
+    setLoading(true);
+    const deletedQuestion = await onDeleteHelDeskQuestion(id, questionId);
+
+    if (deletedQuestion) {
+      setIsQuestions((prevQuestions) =>
+        prevQuestions.filter((q) => q.id !== questionId)
+      );
+      toast({
+        title: deletedQuestion.status == 200 ? "Success" : "Error",
+        description: deletedQuestion.message,
+      });
+      router.refresh();
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     onGetQuestions();
   }, []);
@@ -198,6 +251,8 @@ export const useHelpDesk = (id: string) => {
     errors,
     isQuestions,
     loading,
+    deleteQuestion,
+    onUpdateQuestion,
   };
 };
 export const useFilterQuestions = (id: string) => {

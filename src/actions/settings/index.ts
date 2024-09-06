@@ -396,6 +396,65 @@ export const onCreateHelpDeskQuestion = async (
   }
 };
 
+export const onUpdateHelpDeskQuestion = async (
+  id: string,
+  question: string,
+  answer: string
+) => {
+  const user = await currentUser();
+  if (!user) return;
+
+  try {
+    const updatedQuestion = await client.helpDesk.update({
+      where: {
+        id,
+      },
+      data: {
+        question,
+        answer,
+      },
+    });
+
+    if (updatedQuestion) {
+      return {
+        question: updatedQuestion.question,
+        answer: updatedQuestion.answer,
+        status: 200,
+        message: `Your question updated successfully!`,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const onDeleteHelDeskQuestion = async (
+  id: string,
+  questionId: string
+) => {
+  const user = await currentUser();
+
+  if (!user) return;
+
+  try {
+    const deletedQuestion = await client.helpDesk.delete({
+      where: {
+        id: questionId,
+      },
+      select: {
+        question: true,
+      },
+    });
+
+    return {
+      status: 200,
+      message: `Question: ${deletedQuestion.question} was deleted successfully`,
+    };
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const onGetAllHelpDeskQuestions = async (id: string) => {
   try {
     const questions = await client.helpDesk.findMany({

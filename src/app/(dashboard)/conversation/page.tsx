@@ -1,5 +1,6 @@
 import { onGetAllAccountDomains } from "@/actions/settings";
 import ConversationMenu from "@/components/conversations";
+import Messenger from "@/components/conversations/messenger";
 import InfoBar from "@/components/infobar";
 import { Separator } from "@/components/ui/separator";
 async function ConversationPage() {
@@ -12,7 +13,7 @@ async function ConversationPage() {
         <div className="px-5">
           <InfoBar />
         </div>
-        {/* <Messenger /> */}
+        <Messenger />
       </div>
     </div>
   );

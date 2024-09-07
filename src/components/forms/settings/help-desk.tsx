@@ -1,6 +1,9 @@
 "use client";
 
+import Accordion from "@/components/accordian";
+import { Loader } from "@/components/loader";
 import Section from "@/components/section-label";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,13 +12,21 @@ import {
 } from "@/components/ui/card";
 import { useHelpDesk } from "@/hooks/settings/use-settings";
 import FormGenerator from "../form-generator";
-import { Button } from "@/components/ui/button";
-import { Loader } from "@/components/loader";
-import Accordion from "@/components/accordian";
+import { useState } from "react";
+import Modal from "@/components/modal";
 
 function HelpDesk({ id }: { id: string }) {
-  const { register, onSubmitQuestion, errors, isQuestions, loading } =
-    useHelpDesk(id);
+  const [openEditModal, setIsOpenEditModal] = useState(false);
+  const {
+    register,
+    onSubmitQuestion,
+    onUpdateQuestion,
+    errors,
+    isQuestions,
+    loading,
+    deleteQuestion,
+  } = useHelpDesk(id);
+
   return (
     <Card className="w-full grid grid-cols-1 lg:grid-cols-2">
       <CardContent className="p-6 border-r-[-1px]">
@@ -58,9 +69,13 @@ function HelpDesk({ id }: { id: string }) {
           {isQuestions.length ? (
             isQuestions.map((question) => (
               <Accordion
+                onUpdateQuestion={onUpdateQuestion}
+                setIsOpenEditModal={setIsOpenEditModal}
+                deleteQuestion={() => deleteQuestion(id, question.id)}
                 key={question.id}
                 trigger={question.question}
                 content={question.answer}
+                id={question.id}
               />
             ))
           ) : (

@@ -14,7 +14,7 @@ export type ChatBotMessageProps = {
 export const ConversationSearchSchema: ZodType<ConversationSearchProps> =
   z.object({
     query: z.string().min(1, { message: "You must entery a search query" }),
-    domain: z.string().min(1, { message: "You must select a 1 domain" }),
+    domain: z.string().min(1, { message: "You must select a domain" }),
   });
 
 export const ChatBotMessageSchema: ZodType<ChatBotMessageProps> = z

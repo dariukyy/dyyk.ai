@@ -75,7 +75,7 @@ const CodeSnippet = ({ id }: Props) => {
         )}
 
         <pre>
-          <code className="text-gray-500 text-wrap">{snippet}</code>
+          <code className="text-gray-500 text-wrap h-auto">{snippet}</code>
         </pre>
       </div>
     </div>

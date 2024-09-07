@@ -1,6 +1,7 @@
 import { onLoginUser } from "@/actions/auth";
 import SideBar from "@/components/sidebar";
 import { ChatProvider } from "@/context/user-chat-context";
+import { PrimeReactProvider } from "primereact/api";
 
 import { ReactNode } from "react";
 
@@ -12,14 +13,16 @@ async function OwnerLayout({ children }: Props) {
   const authenticated = await onLoginUser();
   if (!authenticated) return null;
   return (
-    <ChatProvider>
-      <div className="flex h-screen w-full">
-        <SideBar domains={authenticated.domain} />
-        <div className="w-full h-screen flex flex-col py-3 pr-10 pl-20 md:px-10">
-          {children}
+    <PrimeReactProvider>
+      <ChatProvider>
+        <div className="flex h-screen w-full">
+          <SideBar domains={authenticated.domain} />
+          <div className="w-full overflow-x-hidden h-screen flex flex-col pb-5 pl-20 px-5 md:pl-4">
+            {children}
+          </div>
         </div>
-      </div>
-    </ChatProvider>
+      </ChatProvider>
+    </PrimeReactProvider>
   );
 }
 

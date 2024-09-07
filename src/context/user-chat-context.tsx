@@ -10,7 +10,7 @@ type ChatInitialValuesProps = {
   chats: {
     message: string;
     id: string;
-    role: "OWNER" | "CUSTOMER" | null;
+    role: "assistant" | "user" | null;
     createdAt: Date;
     seen: boolean;
   }[];
@@ -19,7 +19,7 @@ type ChatInitialValuesProps = {
       {
         message: string;
         id: string;
-        role: "OWNER" | "CUSTOMER" | null;
+        role: "assistant" | "user" | null;
         createdAt: Date;
         seen: boolean;
       }[]
@@ -64,9 +64,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const useChatContext = () => {
-  const context = useContext(chatContext);
-  if (!context) {
-    throw new Error("useChatContext must be used within a ChatProvider");
-  }
-  return context;
+  const state = useContext(chatContext);
+  return state;
 };

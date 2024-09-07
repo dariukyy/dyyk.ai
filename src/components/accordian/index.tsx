@@ -31,21 +31,22 @@ const Accordion = ({
   onUpdateQuestion,
 }: Props) => {
   return (
-    <div className="flex gap-2 justify-between items-center">
+    <div className="flex gap-4 justify-between items-center ">
       <ShadcnAccordion className="flex-1" type="single" collapsible>
         <AccordionItem value="item-1">
           <AccordionTrigger>{trigger}</AccordionTrigger>
           <AccordionContent>{content}</AccordionContent>
         </AccordionItem>
       </ShadcnAccordion>
-      <div className="flex gap-2 items-center justify-center">
+
+      <div className="flex gap-3 items-start justify-center">
         <Modal
           title="Edit question"
           description=" "
           trigger={
             <EditIcon
               onClick={() => setIsOpenEditModal(true)}
-              className="w-6 h-6 text-blue-500 cursor-pointer"
+              className="w-6 h-6 stroke-gray-500 cursor-pointer"
             />
           }
         >
@@ -60,7 +61,7 @@ const Accordion = ({
         <Modal
           title={`Delete question: ${trigger}`}
           description="Are you sure you want to delete this permanently? This action cannot be undone."
-          trigger={<CircleX className="w-6 h-6 text-red-500 cursor-pointer" />}
+          trigger={<CircleX className="w-6 h-6 text-red-400 cursor-pointer" />}
         >
           <div className="flex gap-3 justify-end items-center">
             <DialogClose asChild>

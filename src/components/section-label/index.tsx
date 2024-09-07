@@ -1,4 +1,4 @@
-function Section({ label, message }: { label: string; message: string }) {
+function Section({ label, message }: { label?: string; message: string }) {
   return (
     <div>
       <p className="text-xl font-semibold mb-2">{label}</p>

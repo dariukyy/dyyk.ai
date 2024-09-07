@@ -10,6 +10,7 @@ import { Loader } from "@/components/loader";
 import DomainUpdate from "./domain-update";
 import CodeSnippet from "./code-snippet";
 import EditChatbotIcon from "./edit-chatbot-idon";
+import ColorPicker from "./colorPicker";
 
 const WelcomeMessage = dynamic(
   () => import("./greetings.message").then((props) => props.default),
@@ -70,6 +71,7 @@ const SettingsForm = ({ id, name, chatBot, plan }: Props) => {
               register={register}
               errors={errors}
             />
+            <ColorPicker />
           </div>
           <div className="col-span-1 relative">
             <Image

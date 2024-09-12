@@ -1,10 +1,10 @@
 "use client";
 import { useChatBot } from "@/hooks/chatbot/use-chatbot";
 import React from "react";
-import { BotWindow } from "./window";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { BotIcon } from "@/icons/bot-icon";
+import { BotWindow } from "./window";
 
 type Props = {};
 
@@ -24,9 +24,11 @@ const AiChatBot = (props: Props) => {
     errors,
   } = useChatBot();
 
+  console.log(onChats, "IN CHATBOT PAGE");
+
   return (
     <div className="h-screen flex flex-col justify-end items-end gap-4">
-      {/* {botOpened && (
+      {botOpened && (
         <BotWindow
           errors={errors}
           setChat={setOnChats}
@@ -42,7 +44,7 @@ const AiChatBot = (props: Props) => {
           onChat={onStartChatting}
           onResponding={onAiTyping}
         />
-      )} */}
+      )}
       <div
         className={cn(
           "rounded-full relative cursor-pointer shadow-md w-20 h-20 flex items-center justify-center bg-grandis",

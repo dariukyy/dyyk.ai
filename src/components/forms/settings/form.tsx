@@ -11,6 +11,7 @@ import DomainUpdate from "./domain-update";
 import CodeSnippet from "./code-snippet";
 import EditChatbotIcon from "./edit-chatbot-idon";
 import ColorPicker from "./colorPicker";
+import { redirect } from "next/navigation";
 
 const WelcomeMessage = dynamic(
   () => import("./greetings.message").then((props) => props.default),
@@ -39,6 +40,11 @@ const SettingsForm = ({ id, name, chatBot, plan }: Props) => {
     deleting,
     loading,
   } = useSettings(id);
+
+  function handleDeleteDomain() {
+    onDeleteDomain();
+    redirect("/dashboard");
+  }
   return (
     <form
       className="flex flex-col gap-8 pb-10 -z-10"
@@ -87,7 +93,7 @@ const SettingsForm = ({ id, name, chatBot, plan }: Props) => {
       </div>
       <div className="flex gap-5 justify-end">
         <Button
-          onClick={onDeleteDomain}
+          onClick={handleDeleteDomain}
           variant="destructive"
           type="button"
           className="px-10 h-[50px]"

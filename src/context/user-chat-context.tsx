@@ -49,6 +49,8 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
   const [chatRoom, setChatRoom] = useState(ChatInitialValues.chatRoom);
   const [realtime, setRealtime] = useState(ChatInitialValues.realtime);
 
+  console.log(chats, "⛑ from context");
+
   const values = {
     chats,
     setChats,

@@ -1,41 +1,15 @@
+"use server";
+
 import { client } from "@/lib/prisma";
-import { onRealTimeChat } from "../conversation";
 import { extractEmailsFromString, extractURLfromString } from "@/lib/utils";
+// import { onRealTimeChat } from "../conversation";
 import { clerkClient } from "@clerk/nextjs";
 import { onMailer } from "../mailer";
 import OpenAi from "openai";
 
 const openai = new OpenAi({
-  apiKey: process.env.OPEN_AI_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 });
-
-export const onGetCurrentChatBot = async (id: string) => {
-  try {
-    const chatbot = await client.domain.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        helpdesk: true,
-        name: true,
-        chatBot: {
-          select: {
-            id: true,
-            welcomeMessage: true,
-            icon: true,
-            background: true,
-            textColor: true,
-            helpdesk: true,
-          },
-        },
-      },
-    });
-
-    if (chatbot) return chatbot;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export const onStoreConversations = async (
   id: string,
@@ -57,6 +31,36 @@ export const onStoreConversations = async (
   });
 };
 
+export const onGetCurrentChatBot = async (id: string) => {
+  try {
+    const chatbot = await client.domain.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        helpdesk: true,
+        name: true,
+        chatBot: {
+          select: {
+            id: true,
+            welcomeMessage: true,
+            icon: true,
+            textColor: true,
+            background: true,
+            helpdesk: true,
+          },
+        },
+      },
+    });
+
+    if (chatbot) {
+      return chatbot;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 let customerEmail: string | undefined;
 
 export const onAiChatBotAssistant = async (
@@ -66,6 +70,7 @@ export const onAiChatBotAssistant = async (
   message: string
 ) => {
   try {
+    console.log("Fetching chatbot domain...");
     const chatBotDomain = await client.domain.findUnique({
       where: {
         id,
@@ -82,6 +87,12 @@ export const onAiChatBotAssistant = async (
         },
       },
     });
+
+    if (!chatBotDomain) {
+      console.log("Chatbot domain not found");
+      return;
+    }
+
     if (chatBotDomain) {
       const extractedEmail = extractEmailsFromString(message);
       if (extractedEmail) {
@@ -231,8 +242,6 @@ export const onAiChatBotAssistant = async (
               if the customer wants to buy a product redirect them to the payment page http://localhost:3000/portal/${id}/payment/${
                 checkCustomer?.customer[0].id
               }
-
-              Also use emojis to make the conversation more engaging, but not too much. Just the right amount.
           `,
             },
             ...chat,
@@ -361,7 +370,7 @@ export const onAiChatBotAssistant = async (
           role: "assistant",
           content: chatCompletion.choices[0].message.content,
         };
-
+        console.log(response);
         return { response };
       }
     }

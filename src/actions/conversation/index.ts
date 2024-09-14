@@ -126,6 +126,7 @@ export const onViewUnReadMessages = async (id: string) => {
     await client.chatMessage.updateMany({
       where: {
         chatRoomId: id,
+        seen: false, // Only update messages that are currently unread
       },
       data: {
         seen: true,
@@ -136,20 +137,20 @@ export const onViewUnReadMessages = async (id: string) => {
   }
 };
 
-export const onRealTimeChat = async (
-  chatroomId: string,
-  message: string,
-  id: string,
-  role: "assistant" | "user"
-) => {
-  pusherServer.trigger(chatroomId, "realtime-mode", {
-    chat: {
-      message,
-      id,
-      role,
-    },
-  });
-};
+// export const onRealTimeChat = async (
+//   chatroomId: string,
+//   message: string,
+//   id: string,
+//   role: "assistant" | "user"
+// ) => {
+//   pusherServer.trigger(chatroomId, "realtime-mode", {
+//     chat: {
+//       message,
+//       id,
+//       role,
+//     },
+//   });
+// };
 
 export const onOwnerSendMessage = async (
   chatroom: string,

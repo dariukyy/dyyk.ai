@@ -30,9 +30,9 @@ export const useChatBot = () => {
           id: string;
           icon: string | null;
           welcomeMessage: string | null;
-          background?: string | null;
-          textColor?: string | null;
-          helpdesk?: boolean;
+          background: string | null;
+          textColor: string | null;
+          helpdesk: boolean;
         } | null;
         helpdesk: {
           id: string;
@@ -77,6 +77,8 @@ export const useChatBot = () => {
     );
   }, [botOpened]);
 
+  let limitRequest = 0;
+
   const onGetDomainChatBot = async (id: string) => {
     setCurrentBotId(id);
     const chatbot = await onGetCurrentChatBot(id);
@@ -92,7 +94,6 @@ export const useChatBot = () => {
       setLoading(false);
     }
   };
-  let limitRequest = 0;
 
   useEffect(() => {
     window.addEventListener("message", (e) => {
@@ -131,6 +132,7 @@ export const useChatBot = () => {
       );
 
       if (response) {
+        console.log("RESPONSE FROM HOOK=>>>>", response);
         setOnAiTyping(false);
         if (response.live) {
           setOnRealTime((prev) => ({
@@ -210,24 +212,24 @@ export const useRealTime = (
 ) => {
   const counterRef = useRef(1);
 
-  useEffect(() => {
-    pusherClient.subscribe(chatRoom);
-    pusherClient.bind("realtime-mode", (data: any) => {
-      console.log("✅", data);
-      if (counterRef.current !== 1) {
-        setChats((prev: any) => [
-          ...prev,
-          {
-            role: data.chat.role,
-            content: data.chat.message,
-          },
-        ]);
-      }
-      counterRef.current += 1;
-    });
-    return () => {
-      pusherClient.unbind("realtime-mode");
-      pusherClient.unsubscribe(chatRoom);
-    };
-  }, []);
+  // useEffect(() => {
+  //   pusherClient.subscribe(chatRoom);
+  //   pusherClient.bind("realtime-mode", (data: any) => {
+  //     console.log("✅", data);
+  //     if (counterRef.current !== 1) {
+  //       setChats((prev: any) => [
+  //         ...prev,
+  //         {
+  //           role: data.chat.role,
+  //           content: data.chat.message,
+  //         },
+  //       ]);
+  //     }
+  //     counterRef.current += 1;
+  //   });
+  //   return () => {
+  //     pusherClient.unbind("realtime-mode");
+  //     pusherClient.unsubscribe(chatRoom);
+  //   };
+  // }, []);
 };

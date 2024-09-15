@@ -89,6 +89,8 @@ export const onGetDomainChatRooms = async (id: string) => {
   }
 };
 
+//WIP: get all chatroms and display in in asc mode in conversations page
+
 export const onGetChatMessages = async (id: string) => {
   try {
     const messages = await client.chatRoom.findMany({

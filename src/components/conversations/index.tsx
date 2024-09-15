@@ -18,8 +18,6 @@ function ConversationMenu({ domains }: ConversationMenuProps) {
   const { register, chatRooms, loading, onGetActiveChatMessages } =
     useConversation();
 
-  console.log(chatRooms, "CHATROMS");
-
   return (
     <div className="py-3 px-0">
       <TabsMenu triggers={TABS_MENU}>

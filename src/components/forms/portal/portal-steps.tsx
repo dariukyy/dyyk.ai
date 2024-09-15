@@ -2,6 +2,7 @@ import React from "react";
 import { FieldErrors, FieldValues, UseFormRegister } from "react-hook-form";
 import QuestionsForm from "./questions";
 import BookAppointmentDate from "./booking-date";
+import { Button } from "@/components/ui/button";
 // import PaymentCheckout from './product-checkout'
 
 type Props = {
@@ -56,7 +57,9 @@ const PortalSteps = ({
   amount,
   stripeId,
 }: Props) => {
-  console.log(step, "STEP!!");
+  const handleCloseWindow = () => {
+    window.close();
+  };
   if (step == 1) {
     return (
       <QuestionsForm

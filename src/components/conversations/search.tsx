@@ -1,4 +1,13 @@
 import { FieldValues, UseFormRegister } from "react-hook-form";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 type ConversationSearchProps = {
   register: UseFormRegister<FieldValues>;
@@ -27,6 +36,21 @@ function ConversationSearch({ register, domains }: ConversationSearchProps) {
           </option>
         ))}
       </select>
+      {/* <Select {...register("domain")}>
+        <SelectTrigger className="w-2/3">
+          <SelectValue placeholder="Select a domain" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Domain name</SelectLabel>
+            {domains?.map((domain) => (
+              <SelectItem key={domain.id} value={domain.id}>
+                {domain.name}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
+      </Select> */}
     </div>
   );
 }

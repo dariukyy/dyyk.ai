@@ -21,7 +21,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  stripeId String?
+  stripeId              String? @unique
+  stripeConnectedLinked Boolean @default(false)
 
   domains Domain[]
 

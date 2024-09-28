@@ -7,7 +7,7 @@ import React from "react";
 
 type Props = { params: { domainid: string; customerid: string } };
 
-async function Page({ params }: Props) {
+async function ReservationPortalPage({ params }: Props) {
   const questions = await onDomainCustomerResponses(params.customerid);
   const bookings = await onGetAllDomainBookings(params.domainid);
   console.log(questions, bookings, "DATA");
@@ -26,4 +26,4 @@ async function Page({ params }: Props) {
   );
 }
 
-export default Page;
+export default ReservationPortalPage;

@@ -8,9 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { currentUser } from "@clerk/nextjs";
 import React from "react";
 
-type Props = {};
-
-const Page = async (props: Props) => {
+const Page = async () => {
   const user = await currentUser();
 
   if (!user) return null;

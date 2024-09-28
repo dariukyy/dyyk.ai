@@ -11,7 +11,7 @@ import Modal from "../modal";
 import { Button } from "../ui/button";
 
 type Props = {
-  production: boolean;
+  production?: boolean;
   id?: string;
   trigger: string;
   content: string;

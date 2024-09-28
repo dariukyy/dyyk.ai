@@ -4,6 +4,9 @@ import { Card, CardContent, CardDescription } from "../ui/card";
 import Image from "next/image";
 import { INTEGRATION_LIST_ITEMS } from "@/constants/integrations";
 import IntegrationTrigger from "./IntegrationTrigger";
+import { useStripe } from "@/hooks/billing/use-billing";
+import { Button } from "../ui/button";
+import { onGetStripeDashboardLink } from "@/actions/payments";
 
 type Props = {
   connections: {
@@ -30,13 +33,20 @@ const IntegrationsList = ({ connections }: Props) => {
                 </div>
                 <h2 className="font-bold capitalize">{item.name}</h2>
               </div>
-              <IntegrationTrigger
-                connections={connections}
-                title={item.title}
-                descrioption={item.modalDescription}
-                logo={item.logo}
-                name={item.name}
-              />
+              <div className="flex flex-col gap-7">
+                <IntegrationTrigger
+                  connections={connections}
+                  title={item.title}
+                  descrioption={item.modalDescription}
+                  logo={item.logo}
+                  name={item.name}
+                />
+                {connections.stripe === true && (
+                  <form action={onGetStripeDashboardLink}>
+                    <Button>View Dashboard</Button>
+                  </form>
+                )}
+              </div>
             </div>
             <CardDescription>{item.description}</CardDescription>
           </CardContent>

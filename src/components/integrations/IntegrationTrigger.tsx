@@ -29,9 +29,17 @@ const IntegrationTrigger = ({
       logo={logo}
       description={descrioption}
       trigger={
-        <Card className="px-3 py-2 cursor-pointer flex gap-2">
-          <CloudIcon />
-          {connections[name] ? "connected" : "connect"}
+        <Card
+          className={`px-3 py-2 cursor-pointer flex gap-2 ${
+            connections.stripe ? "border-green-600 border-2" : ""
+          }`}
+        >
+          <CloudIcon
+            className={`${connections[name] ? "stroke-green-600" : ""}`}
+          />
+          <p className={`${connections[name] ? "text-green-700" : ""}`}>
+            {connections[name] ? "connected" : "connect"}
+          </p>
         </Card>
       }
     >

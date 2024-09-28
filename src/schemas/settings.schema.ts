@@ -7,6 +7,12 @@ export type FilterQuestionsProps = {
   question: string;
 };
 
+export type AddProductProps = {
+  name: string;
+  image: any;
+  price: string;
+};
+
 export const AddDomainSchema = z.object({
   domain: z
     .string()

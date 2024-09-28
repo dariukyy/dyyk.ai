@@ -13,7 +13,7 @@ export const StripeConnect = ({ connected }: StripeConnectProps) => {
   return (
     <Button disabled={connected} onClick={onStripeConnect}>
       <Loader loading={onStripeAccountPending}>
-        {connected ? "Connected" : "Connect to stripe"}
+        {connected ? "You already connected to Stripe" : "Connect to stripe"}
       </Loader>
     </Button>
   );

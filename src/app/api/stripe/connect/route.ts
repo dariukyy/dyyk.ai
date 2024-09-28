@@ -1,149 +1,60 @@
 //WIP create connection to stripe account
 
 import { client } from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
 import { currentUser } from "@clerk/nextjs";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
-
-const stripe = new Stripe(process.env.STRIPE_SECRET!, {
-  typescript: true,
-  apiVersion: "2024-06-20",
-});
 
 export async function GET() {
   try {
     const user = await currentUser();
+
+    console.log(user, "USER IN GET <-----=");
+
     if (!user) return new NextResponse("User not authenticated");
 
     const account = await stripe.accounts.create({
-      country: "US",
-      type: "custom",
-      business_type: "company",
-      capabilities: {
-        card_payments: {
-          requested: true,
+      email: user.emailAddresses[0].emailAddress as string,
+      controller: {
+        losses: {
+          payments: "application",
         },
-        transfers: {
-          requested: true,
+        fees: {
+          payer: "application",
         },
-      },
-      external_account: "btok_us",
-      tos_acceptance: {
-        date: 1547923073,
-        ip: "172.18.80.19",
+        stripe_dashboard: {
+          type: "express",
+        },
       },
     });
 
+    console.log(account.id, "ACCOUNT ID <-----=");
+
     if (account) {
-      const approve = await stripe.accounts.update(account.id, {
-        business_profile: {
-          mcc: "5045",
-          url: "https://bestcookieco.com",
+      const saveAccountId = await client.user.update({
+        where: {
+          clerkId: user.id,
         },
-        company: {
-          address: {
-            city: "Fairfax",
-            line1: "123 State St",
-            postal_code: "22031",
-            state: "VA",
-          },
-          tax_id: "000000000",
-          name: "The Best Cookie Co",
-          phone: "8888675309",
+        data: {
+          stripeId: account.id,
+        },
+        select: {
+          stripeId: true,
         },
       });
-      if (approve) {
-        const person = await stripe.accounts.createPerson(account.id, {
-          first_name: "Jenny",
-          last_name: "Rosen",
-          relationship: {
-            representative: true,
-            title: "CEO",
-          },
+
+      if (saveAccountId) {
+        const accountLink = await stripe.accountLinks.create({
+          account: saveAccountId.stripeId as string,
+          refresh_url: "http://localhost:3000/integration",
+          return_url: "http://localhost:3000/integration",
+          type: "account_onboarding",
         });
-        if (person) {
-          const approvePerson = await stripe.accounts.updatePerson(
-            account.id,
-            person.id,
-            {
-              address: {
-                city: "victoria ",
-                line1: "123 State St",
-                postal_code: "V8P 1A1",
-                state: "BC",
-              },
-              dob: {
-                day: 10,
-                month: 11,
-                year: 1980,
-              },
-              ssn_last_4: "0000",
-              phone: "8888675309",
-              email: "jenny@bestcookieco.com",
-              relationship: {
-                executive: true,
-              },
-            }
-          );
-          if (approvePerson) {
-            const owner = await stripe.accounts.createPerson(account.id, {
-              first_name: "Kathleen",
-              last_name: "Banks",
-              email: "kathleen@bestcookieco.com",
-              address: {
-                city: "victoria ",
-                line1: "123 State St",
-                postal_code: "V8P 1A1",
-                state: "BC",
-              },
-              dob: {
-                day: 10,
-                month: 11,
-                year: 1980,
-              },
-              phone: "8888675309",
-              relationship: {
-                owner: true,
-                percent_ownership: 80,
-              },
-            });
-            if (owner) {
-              const complete = await stripe.accounts.update(account.id, {
-                company: {
-                  owners_provided: true,
-                },
-              });
-              if (complete) {
-                console.log(account.id, "ACCOUNT ID <-----=");
-                const saveAccountId = await client.user.update({
-                  where: {
-                    clerkId: user.id,
-                  },
-                  data: {
-                    stripeId: account.id,
-                  },
-                });
 
-                if (saveAccountId) {
-                  const accountLink = await stripe.accountLinks.create({
-                    account: account.id,
-                    refresh_url:
-                      "http://localhost:3000/callback/stripe/refresh",
-                    return_url: "http://localhost:3000/callback/stripe/success",
-                    type: "account_onboarding",
-                    collection_options: {
-                      fields: "currently_due",
-                    },
-                  });
-
-                  return NextResponse.json({
-                    url: accountLink.url,
-                  });
-                }
-              }
-            }
-          }
-        }
+        return NextResponse.json({
+          url: accountLink.url,
+        });
       }
     }
   } catch (error) {
@@ -152,4 +63,53 @@ export async function GET() {
       error
     );
   }
+}
+
+export async function POST(request: Request) {
+  const body = await request.text();
+  const signature = headers().get("Stripe-Signature") ?? "";
+
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_CONNECT_WEBHOOK_SECRET || ""
+    );
+  } catch (err) {
+    return new Response(
+      `Webhook Error: ${err instanceof Error ? err.message : "Unknown Error"}`,
+      { status: 400 }
+    );
+  }
+
+  switch (event.type) {
+    case "account.updated": {
+      const account = event.data.object;
+
+      const data = await client.user.update({
+        where: {
+          stripeId: account.id,
+        },
+        data: {
+          stripeConnectedLinked:
+            account.capabilities?.transfers === "pending" ||
+            account.capabilities?.transfers === "inactive"
+              ? false
+              : true,
+        },
+        select: {
+          stripeConnectedLinked: true,
+        },
+      });
+      console.log(data, "DATA <-----=");
+      break;
+    }
+    default: {
+      console.log("unhandled event");
+    }
+  }
+
+  return new Response("Webhook received", { status: 200 });
 }

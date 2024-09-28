@@ -2,6 +2,7 @@
 
 import { client } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
+import { revalidatePath } from "next/cache";
 
 export const onDomainCustomerResponses = async (customerId: string) => {
   try {
@@ -42,6 +43,7 @@ export const onGetAllDomainBookings = async (domainId: string) => {
     });
 
     if (bookings) {
+      revalidatePath("/appointment");
       return bookings;
     }
   } catch (error) {

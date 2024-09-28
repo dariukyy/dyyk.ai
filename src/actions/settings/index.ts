@@ -1,7 +1,7 @@
 "use server";
-
 import { client } from "@/lib/prisma";
 import { clerkClient, currentUser } from "@clerk/nextjs";
+import { revalidatePath } from "next/cache";
 
 export const onIntegrateDomain = async (domain: string, icon: string) => {
   const user = await currentUser();
@@ -197,6 +197,7 @@ export const onGetCurrentDomainInfo = async (domain: string) => {
     if (userDomain) {
       return userDomain;
     }
+    revalidatePath(`/settings/${domain}`);
   } catch (error) {
     console.log(error);
   }
@@ -551,12 +552,45 @@ export const onGetPaymentConnected = async () => {
           clerkId: user.id,
         },
         select: {
-          stripeId: true,
+          stripeConnectedLinked: true,
         },
       });
       if (connected) {
-        return connected.stripeId;
+        return connected.stripeConnectedLinked;
       }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const onCreateNewDomainProduct = async (
+  id: string,
+  name: string,
+  image: string,
+  price: string
+) => {
+  try {
+    const product = await client.domain.update({
+      where: {
+        id,
+      },
+      data: {
+        products: {
+          create: {
+            name,
+            image,
+            price: Number(price),
+          },
+        },
+      },
+    });
+
+    if (product) {
+      return {
+        status: 200,
+        message: "Product successfully created",
+      };
     }
   } catch (error) {
     console.log(error);

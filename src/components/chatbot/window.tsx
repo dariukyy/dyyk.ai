@@ -11,7 +11,7 @@ import { Separator } from "../ui/separator";
 import Bubble from "./bubble";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Paperclip, Send } from "lucide-react";
+import { Circle, Paperclip, Send } from "lucide-react";
 import { Label } from "../ui/label";
 import { CardDescription, CardTitle } from "../ui/card";
 import Accordion from "../accordian";
@@ -71,14 +71,14 @@ export const BotWindow = forwardRef<HTMLDivElement, Props>(
     ref
   ) => {
     return (
-      <div className="h-[670px] w-[450px] flex flex-col bg-white shadow-lg rounded-xl mr-[80px] border-[1px] overflow-hidden">
-        <div className="flex justify-between px-4 pt-4">
-          <div className="flex gap-2">
+      <div className="h-[707px] w-[450px] flex flex-col bg-white shadow-lg rounded-xl mr-[70px] border-[1px] overflow-hidden">
+        <div className="flex justify-between px-4 pt-4 bg-gradient-to-r from-[#622ae8] to-[#916aef] h-2/4 clip-custom z-10 text-white">
+          <div className="flex gap-3">
             <Avatar className="w-20 h-20">
               <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
-            <div className="flex items-start flex-col">
+            <div className="flex items-start gap-1 flex-col">
               <h3 className="text-lg font-bold leading-none">
                 Sales Rep - Web Prodigies
               </h3>
@@ -91,6 +91,7 @@ export const BotWindow = forwardRef<HTMLDivElement, Props>(
               )}
             </div>
           </div>
+
           <div className="relative w-16 h-16">
             <Image
               src="https://ucarecdn.com/019dd17d-b69b-4dea-a16b-60e0f25de1e9/propuser.png"
@@ -100,54 +101,61 @@ export const BotWindow = forwardRef<HTMLDivElement, Props>(
             />
           </div>
         </div>
-        <TabsMenu
-          triggers={BOT_TABS_MENU}
-          className=" bg-transparent border-[1px] border-border m-2"
-        >
-          <TabsContent value="chat">
-            <Separator orientation="horizontal" />
-            <div className="flex flex-col h-full">
-              <div
-                style={{
-                  background: theme || "",
-                  color: textColor || "",
-                }}
-                className="px-3 flex h-[400px] flex-col py-5 gap-3 chat-window overflow-y-auto"
-                ref={ref}
-              >
-                {chats.map((chat, key) => (
-                  <Bubble key={key} message={chat} />
-                ))}
-                {onResponding && <Responding />}
-              </div>
-              <form
-                onSubmit={onChat}
-                className="flex px-3 py-1 flex-col flex-1 bg-porcelain"
-              >
-                <div className="flex justify-between">
-                  <Input
-                    {...register("content")}
-                    placeholder="Type your message..."
-                    className="focus-visible:ring-0 flex-1 p-0 focus-visible:ring-offset-0 bg-porcelain rounded-none outline-none border-none"
-                  />
-                  <Button type="submit" className="mt-3">
-                    <Send />
-                  </Button>
-                </div>
-                <Label htmlFor="bot-image">
-                  <Paperclip />
-                  <Input
-                    {...register("image")}
-                    type="file"
-                    id="bot-image"
-                    className="hidden"
-                  />
-                </Label>
-              </form>
-            </div>
-          </TabsContent>
 
-          <TabsContent value="helpdesk">
+        {/* <TabsMenu
+          triggers={BOT_TABS_MENU}
+          className=" bg-transparent border-[1px] z-20 border-border m-2"
+        >
+          <TabsContent value="chat" className="relative z-20 bg-white"> */}
+
+        <div className="flex flex-col h-full -mt-[40px]">
+          <div
+            style={{
+              background: theme || "",
+              color: textColor || "",
+            }}
+            className="px-3 flex h-[500px] flex-col pb-5 py-[3.5rem] gap-4 chat-window overflow-y-auto"
+            ref={ref}
+          >
+            {chats.map((chat, key) => (
+              <Bubble key={key} message={chat} />
+            ))}
+            {onResponding && <Responding />}
+          </div>
+          <div className="px-7">
+            <Separator orientation="horizontal" />
+          </div>
+          <form
+            onSubmit={onChat}
+            className="flex px-3 py-1 flex-col flex-1 bg-inherit"
+          >
+            <div className="flex justify-between">
+              <Input
+                {...register("content")}
+                placeholder="Type your message..."
+                className="focus-visible:ring-0 flex-1 p-0 focus-visible:ring-offset-0 bg-inherit rounded-none outline-none border-none"
+              />
+              <Button
+                type="submit"
+                className="mt-3 rounded-full bg-gradient-to-r from-[#622ae8] to-[#916aef]"
+              >
+                <Send />
+              </Button>
+            </div>
+            <Label htmlFor="bot-image">
+              <Paperclip />
+              <Input
+                {...register("image")}
+                type="file"
+                id="bot-image"
+                className="hidden"
+              />
+            </Label>
+          </form>
+        </div>
+        {/* </TabsContent> */}
+
+        {/* <TabsContent value="helpdesk">
             <div className="h-[485px] overflow-y-auto overflow-x-hidden p-4 flex flex-col gap-4">
               <div>
                 <CardTitle>Help Desk</CardTitle>
@@ -167,9 +175,9 @@ export const BotWindow = forwardRef<HTMLDivElement, Props>(
               ))}
             </div>
           </TabsContent>
-        </TabsMenu>
+        </TabsMenu> */}
         <div className="flex justify-center ">
-          <p className="text-gray-400 text-xs">Powered By Dyyk</p>
+          <p className="text-gray-400 pb-3 text-xs">Powered By Dyyk</p>
         </div>
       </div>
     );

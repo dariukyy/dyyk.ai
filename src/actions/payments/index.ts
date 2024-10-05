@@ -48,7 +48,6 @@ export const onGetDomainProductsAndConnectedAccountId = async (id: string) => {
 
 export const onGetStripeDashboardLink = async () => {
   const user = await currentUser();
-  console.log(user);
 
   if (!user) {
     throw new Error("User not found");

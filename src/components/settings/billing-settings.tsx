@@ -54,7 +54,8 @@ const BillingSettings = async (props: Props) => {
             )
           }
         >
-          {/* <SubscriptionForm plan={plan!} /> */}hey
+          {/* <SubscriptionForm plan={plan!} /> */}
+          hey
         </Modal>
       </div>
       <div className="lg:col-span-2">

@@ -39,10 +39,10 @@ const Bubble = ({ message, createdAt }: Props) => {
       )}
       <div
         className={cn(
-          "flex flex-col gap-3 min-w-[200px] max-w-[300px] p-4 rounded-t-md",
+          "flex flex-col gap-3 min-w-[200px] max-w-[300px] p-4 rounded-t-lg ",
           message.role == "assistant"
-            ? "bg-muted rounded-r-md"
-            : "bg-grandis rounded-l-md"
+            ? "bg-[#f1f3f7] rounded-r-md"
+            : "bg-gradient-to-r from-[#622ae8] to-[#916aef] rounded-l-md text-white"
         )}
       >
         {createdAt ? (
@@ -75,7 +75,7 @@ const Bubble = ({ message, createdAt }: Props) => {
                 href={message.link}
                 target="_blank"
               >
-                Your Link
+                {"here" + "."}
               </Link>
             )}
           </p>

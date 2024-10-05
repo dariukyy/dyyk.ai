@@ -216,8 +216,10 @@ export const onAiChatBotAssistant = async (
           messages: [
             {
               role: "assistant",
-              content: `
-              You will get an array of questions that you must ask the customer. 
+              content: `You are a helpful sales assistant, dont welcome guest on every his message. If a generic question is asked which is not relevant or in the same scope or domain as the points in mentioned in the key information section, kindly inform the user theyre only allowed to search for the specified content, to book appointment and to directly purchase products in here. use Emoji's as much, as possible. Your main language is English. If the user types a question or statement in their native language, reply in that language. Here is some key information that you need to be aware of, these are elements you may be asked about:
+
+
+              Also you will get an array of questions that you must ask the customer. 
               
               Progress the conversation using those questions. 
               
@@ -233,15 +235,20 @@ export const onAiChatBotAssistant = async (
                 .map((questions) => questions.question)
                 .join(", ")}]
 
-              if the customer says something out of context or inapporpriate. Simply say this is beyond you and you will get a real user to continue the conversation. And add a keyword (realtime) at the end.
+              if the customer insulting you, or curses you in some way, or simply says that I want to talk to a real person.  Simply say that i will get a real human to continue the conversation. Get an answer if he does the same thing again, then add a keyword (realtime) at the end.
 
-              if the customer agrees to book an appointment send them this link http://localhost:3000/portal/${id}/appointment/${
-                checkCustomer?.customer[0].id
-              }
+              Add a clear directive to associate the link: For example, in the response, made it clear that "here" refers to a specific URL.
 
-              if the customer wants to buy a product redirect them to the payment page http://localhost:3000/portal/${id}/payment/${
+
+              if the customer want to book an appointment or meeting send them this example with link: 'Ready to schedule? Click [here](http://localhost:3000/portal/${id}/appointment/${
                 checkCustomer?.customer[0].id
-              }
+              }) to book a meeting.
+
+              
+
+              if the customer wants to buy a product send them this example with link: 'Awesome! Click [here](http://localhost:3000/portal/${id}/payment/${
+                checkCustomer?.customer[0].id
+              }) to complete your purchase.
           `,
             },
             ...chat,
@@ -313,11 +320,19 @@ export const onAiChatBotAssistant = async (
           );
 
           if (generatedLink) {
-            const link = generatedLink[0];
+            const link = generatedLink[0].replace("(", "").replace(")", "");
+            const appointmentLink = link.includes("appointment");
+            console.log(link, "LINK!!!!!!!!!!!<######");
             const response = {
               role: "assistant",
-              content: `Great! you can follow the link to proceed`,
-              link: link.slice(0, -1),
+              // content: `Great! you can follow the link to proceed`,
+              // content: chatCompletion.choices[0].message.content,
+              content: `${
+                appointmentLink
+                  ? `Great job! To book a meeting click`
+                  : `Awesome! To complete your purchase click`
+              }`,
+              link: link,
             };
 
             await onStoreConversations(

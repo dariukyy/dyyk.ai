@@ -1,11 +1,14 @@
 "use server";
 
 import { client } from "@/lib/prisma";
+
 import { extractEmailsFromString, extractURLfromString } from "@/lib/utils";
 // import { onRealTimeChat } from "../conversation";
 import { clerkClient } from "@clerk/nextjs";
-import { onMailer } from "../mailer";
+import { headers } from "next/headers";
 import OpenAi from "openai";
+import { onMailer } from "../mailer";
+import { rateLimiter } from "../../lib/redis";
 
 const openai = new OpenAi({
   apiKey: process.env.OPENAI_API_KEY,
@@ -69,8 +72,28 @@ export const onAiChatBotAssistant = async (
   author: "user",
   message: string
 ) => {
+  function IP() {
+    const FALLBACK_IP_ADDRESS = "0.0.0.0";
+    const forwardedFor = headers().get("x-forwarded-for");
+
+    if (forwardedFor) {
+      return forwardedFor.split(",")[0] ?? FALLBACK_IP_ADDRESS;
+    }
+
+    return headers().get("x-real-ip") ?? FALLBACK_IP_ADDRESS;
+  }
   try {
-    console.log("Fetching chatbot domain...");
+    // Rate limit the chatbot
+    const { success: isRateLimited } = await rateLimiter.limit(IP());
+    if (!isRateLimited) {
+      const response = {
+        role: "assistant",
+        content: `You're sending messages too fast. Take a short break to prevent spam detection❗️❗️❗️`,
+      };
+
+      return { response };
+    }
+
     const chatBotDomain = await client.domain.findUnique({
       where: {
         id,
@@ -322,7 +345,6 @@ export const onAiChatBotAssistant = async (
           if (generatedLink) {
             const link = generatedLink[0].replace("(", "").replace(")", "");
             const appointmentLink = link.includes("appointment");
-            console.log(link, "LINK!!!!!!!!!!!<######");
             const response = {
               role: "assistant",
               // content: `Great! you can follow the link to proceed`,
@@ -385,7 +407,7 @@ export const onAiChatBotAssistant = async (
           role: "assistant",
           content: chatCompletion.choices[0].message.content,
         };
-        console.log(response);
+        console.log(response, "RESPONSE!!!");
         return { response };
       }
     }

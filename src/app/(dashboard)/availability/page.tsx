@@ -30,7 +30,7 @@ const AvailabilityPage = async () => {
   const user = await currentUser();
   const availability = await onGetUserAvailability(user?.id as string);
 
-  // return (
+  return (
     <div className="flex flex-col gap-10">
       <Card className="mt-3">
         <CardHeader>

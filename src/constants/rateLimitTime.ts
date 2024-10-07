@@ -1,2 +1,2 @@
-export const RATE_LIMIT_TIME = "60 s";
-export const REQ_LIMIT = 15;
+export const RATE_LIMIT_TIME = "10 s";
+export const REQ_LIMIT = 1;

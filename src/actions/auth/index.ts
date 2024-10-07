@@ -19,6 +19,20 @@ export const onCompleteUserRegistration = async (
         subscription: {
           create: {},
         },
+
+        availability: {
+          createMany: {
+            data: [
+              { day: "Monday", fromTime: "08:00", tillTime: "17:00" },
+              { day: "Tuesday", fromTime: "08:00", tillTime: "17:00" },
+              { day: "Wednesday", fromTime: "08:00", tillTime: "17:00" },
+              { day: "Thursday", fromTime: "08:00", tillTime: "17:00" },
+              { day: "Friday", fromTime: "08:00", tillTime: "17:00" },
+              { day: "Saturday", fromTime: "08:00", tillTime: "17:00" },
+              { day: "Sunday", fromTime: "08:00", tillTime: "17:00" },
+            ],
+          },
+        },
       },
       select: {
         fullname: true,

@@ -1,8 +1,9 @@
 "use client";
 import Section from "@/components/section-label";
-import { useToast } from "@/components/ui/use-toast";
+
 import { CheckCheck, Copy, CopyCheck } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type Props = {
   id: string;
@@ -10,7 +11,6 @@ type Props = {
 
 const CodeSnippet = ({ id }: Props) => {
   const [copied, setIsCopied] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     if (copied) {
@@ -64,10 +64,7 @@ const CodeSnippet = ({ id }: Props) => {
             onClick={() => {
               setIsCopied(true);
               navigator.clipboard.writeText(snippet);
-              toast({
-                title: "Copied to clipboard",
-                description: "You can now paste the code inside your website",
-              });
+              toast.success("Copied to clipboard");
             }}
           />
         ) : (

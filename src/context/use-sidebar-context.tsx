@@ -1,6 +1,6 @@
 "use client";
 
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useChatContext } from "./user-chat-context";
@@ -15,7 +15,6 @@ const useSideBar = () => {
   const [expand, setExpand] = useState<boolean | undefined>(undefined);
   const router = useRouter();
   const pathname = usePathname();
-  const { toast } = useToast();
   const [realtime, setRealtime] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -29,10 +28,7 @@ const useSideBar = () => {
       );
       if (realtime) {
         setRealtime(realtime.chatRoom.live);
-        toast({
-          title: "Success",
-          description: realtime.message,
-        });
+        toast.success(realtime.message);
       }
     } catch (error) {
       console.log(error);

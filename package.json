@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.12",
+    "@conform-to/react": "^1.2.2",
+    "@conform-to/zod": "^1.2.2",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^5.19.0",
@@ -68,6 +70,7 @@
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
     "react-hook-form": "^7.53.0",
+    "react-hot-toast": "^2.4.1",
     "react-resizable-panels": "^2.1.1",
     "recharts": "^2.12.7",
     "sonner": "^1.5.0",

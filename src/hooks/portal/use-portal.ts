@@ -3,8 +3,8 @@ import {
   onDomainCustomerResponses,
   saveAnswers,
 } from "@/actions/appointment";
-import { useToast } from "@/components/ui/use-toast";
-import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export const usePortal = (
@@ -18,7 +18,6 @@ export const usePortal = (
     formState: { errors },
     handleSubmit,
   } = useForm();
-  const { toast } = useToast();
   const [step, setStep] = useState<number>(1);
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<string | undefined>("");
@@ -51,10 +50,7 @@ export const usePortal = (
           email
         );
         if (booked && booked.status == 200) {
-          toast({
-            title: "Success",
-            description: booked.message,
-          });
+          toast.success(booked.message);
           setStep(3);
         }
 

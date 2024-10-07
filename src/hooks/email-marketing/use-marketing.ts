@@ -6,7 +6,7 @@ import {
   onGetEmailTemplate,
   onSaveEmailTemplate,
 } from "@/actions/mail";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import {
   EmailMarketingBodySchema,
   EmailMarketingSchema,
@@ -42,7 +42,6 @@ export const useEmailMarketing = () => {
   } = useForm({
     resolver: zodResolver(EmailMarketingBodySchema),
   });
-  const { toast } = useToast();
   const router = useRouter();
 
   const onCreateCampaign = handleSubmit(async (values) => {
@@ -51,10 +50,7 @@ export const useEmailMarketing = () => {
       const campaign = await onCreateMarketingCampaign(values.name);
       if (campaign) {
         reset();
-        toast({
-          title: "Success",
-          description: campaign.message,
-        });
+        toast.success(campaign.message);
         setLoading(false);
         router.refresh();
       }
@@ -69,10 +65,7 @@ export const useEmailMarketing = () => {
       const template = JSON.stringify(values.description);
       const emailTemplate = await onSaveEmailTemplate(template, campaignId!);
       if (emailTemplate) {
-        toast({
-          title: "Success",
-          description: emailTemplate.message,
-        });
+        toast.success(emailTemplate.message);
         setEditing(false);
       }
     } catch (error) {
@@ -87,10 +80,7 @@ export const useEmailMarketing = () => {
       setProcessing(true);
       const customersAdd = await onAddCustomersToEmail(isSelected, campaignId!);
       if (customersAdd) {
-        toast({
-          title: "Success",
-          description: customersAdd.message,
-        });
+        toast.success(customersAdd.message);
         setProcessing(false);
         setCampaignId(undefined);
         router.refresh();
@@ -114,10 +104,7 @@ export const useEmailMarketing = () => {
     try {
       const mails = await onBulkMailer(emails, campaignId);
       if (mails) {
-        toast({
-          title: "Success",
-          description: mails.message,
-        });
+        toast.success(mails.message);
         router.refresh();
       }
     } catch (error) {

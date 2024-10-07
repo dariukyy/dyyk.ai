@@ -12,7 +12,7 @@ import {
   onUpdatePassword,
   onUpdateWelcomeMessage,
 } from "@/actions/settings";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import {
   ChangePasswordProps,
   ChangePasswordSchema,
@@ -54,7 +54,6 @@ export const useChangePassword = () => {
     resolver: zodResolver(ChangePasswordSchema),
     mode: "onChange",
   });
-  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
 
   const onChangePassword = handleSubmit(async (values) => {
@@ -64,7 +63,7 @@ export const useChangePassword = () => {
       if (updated) {
         reset();
         setLoading(false);
-        toast({ title: "Success", description: updated.message });
+        toast.success(updated.message);
       }
     } catch (error) {
       console.log(error);
@@ -88,7 +87,6 @@ export const useSettings = (id: string) => {
     resolver: zodResolver(DomainSettingsSchema),
   });
   const router = useRouter();
-  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
 
@@ -97,30 +95,24 @@ export const useSettings = (id: string) => {
     if (values.domain) {
       const domain = await onUpdateDomain(id, values.domain);
       if (domain) {
-        toast({
-          title: "Success",
-          description: domain.message,
-        });
+        toast.success(domain.message);
       }
     }
     if (values.image[0]) {
       const uploaded = await upload.uploadFile(values.image[0]);
       const image = await onChatBotImageUpdate(id, uploaded.uuid);
       if (image) {
-        toast({
-          title: image.status == 200 ? "Success" : "Error",
-          description: image.message,
-        });
+        image.status == 200
+          ? toast.success(image.message)
+          : toast.error(image.message);
+
         setLoading(false);
       }
     }
     if (values.welcomeMessage) {
       const message = await onUpdateWelcomeMessage(values.welcomeMessage, id);
       if (message) {
-        toast({
-          title: "Success",
-          description: message.message,
-        });
+        toast.success(message.message);
       }
     }
     reset();
@@ -132,10 +124,7 @@ export const useSettings = (id: string) => {
     setDeleting(true);
     const deleted = await onDeleteUserDomain(id);
     if (deleted) {
-      toast({
-        title: "Success",
-        description: deleted.message,
-      });
+      toast.success(deleted.message);
     }
     setDeleting(false);
     router.refresh();
@@ -160,7 +149,6 @@ export const useHelpDesk = (id: string) => {
   } = useForm<HelpDeskQuestionsProps>({
     resolver: zodResolver(HelpDeskQuestionsSchema),
   });
-  const { toast } = useToast();
   const router = useRouter();
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -177,10 +165,10 @@ export const useHelpDesk = (id: string) => {
     );
     if (question) {
       setIsQuestions(question.questions!);
-      toast({
-        title: question.status == 200 ? "Success" : "Error",
-        description: question.message,
-      });
+      question.status == 200
+        ? toast.success(question.message)
+        : toast.error(question.message);
+
       setLoading(false);
       reset();
     }
@@ -220,10 +208,9 @@ export const useHelpDesk = (id: string) => {
         )
       );
 
-      toast({
-        title: updatedQuestion.status == 200 ? "Success" : "Error",
-        description: updatedQuestion.message,
-      });
+      updatedQuestion.status == 200
+        ? toast.success(updatedQuestion.message)
+        : toast.error(updatedQuestion.message);
     }
     setLoading(false);
   };
@@ -236,10 +223,9 @@ export const useHelpDesk = (id: string) => {
       setIsQuestions((prevQuestions) =>
         prevQuestions.filter((q) => q.id !== questionId)
       );
-      toast({
-        title: deletedQuestion.status == 200 ? "Success" : "Error",
-        description: deletedQuestion.message,
-      });
+
+      toast.success(deletedQuestion.message);
+
       router.refresh();
       setLoading(false);
     }
@@ -268,7 +254,6 @@ export const useFilterQuestions = (id: string) => {
   } = useForm<FilterQuestionsProps>({
     resolver: zodResolver(FilterQuestionsSchema),
   });
-  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
   const [isQuestions, setIsQuestions] = useState<
     { id: string; question: string }[]
@@ -279,10 +264,10 @@ export const useFilterQuestions = (id: string) => {
     const questions = await onCreateFilterQuestions(id, values.question);
     if (questions) {
       setIsQuestions(questions.questions!);
-      toast({
-        title: questions.status == 200 ? "Success" : "Error",
-        description: questions.message,
-      });
+      questions.status == 200
+        ? toast.success(questions.message)
+        : toast.error(questions.message);
+
       reset();
       setLoading(false);
     }
@@ -311,7 +296,6 @@ export const useFilterQuestions = (id: string) => {
 };
 
 export const useProducts = (domainId: string) => {
-  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
   const {
@@ -335,10 +319,7 @@ export const useProducts = (domainId: string) => {
       );
       if (product) {
         reset();
-        toast({
-          title: "Success",
-          description: product.message,
-        });
+        toast.success(product.message);
 
         setLoading(false);
         router.refresh();

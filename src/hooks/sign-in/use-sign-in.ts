@@ -1,4 +1,4 @@
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { UserLoginProps, UserLoginSchema } from "@/schemas/auth.scema";
 import { useSignIn } from "@clerk/nextjs";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,7 +10,6 @@ export const useSignInForm = () => {
   const { isLoaded, setActive, signIn } = useSignIn();
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-  const { toast } = useToast();
   const methods = useForm<UserLoginProps>({
     resolver: zodResolver(UserLoginSchema),
     mode: "onChange",
@@ -28,19 +27,13 @@ export const useSignInForm = () => {
 
         if (authenticated.status === "complete") {
           await setActive({ session: authenticated.createdSessionId });
-          toast({
-            title: "Success",
-            description: "Welcome back!",
-          });
+          toast.success("Welcome back!");
           router.push("/dashboard");
         }
       } catch (error: any) {
         setLoading(false);
         if (error.errors[0].code === "form_password_incorrect")
-          toast({
-            title: "Error",
-            description: "email/password is incorrect try again",
-          });
+          toast.error("Email or Passowrd is incorrect");
       }
     }
   );

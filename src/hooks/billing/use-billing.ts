@@ -1,5 +1,6 @@
 import { onCreateCustomerPaymentIntentSecret } from "@/actions/stripe";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import {
@@ -58,7 +59,6 @@ export const useStripeCustomer = (amount: number, stripeId: string) => {
 
 export const useCompleteCustomerPayment = (onNext: () => void) => {
   const [processing, setProcessing] = useState<boolean>(false);
-  const { toast } = useToast();
   const stripe = useStripeHook();
   const elements = useElements();
 
@@ -86,10 +86,7 @@ export const useCompleteCustomerPayment = (onNext: () => void) => {
       }
 
       if (paymentIntent?.status === "succeeded") {
-        toast({
-          title: "Success",
-          description: "Payment complete",
-        });
+        toast.success("Payment Completed");
         onNext();
       }
 

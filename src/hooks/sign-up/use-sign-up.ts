@@ -1,6 +1,6 @@
 "use client";
 
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import {
   UserRegistrationProps,
   UserRegistrationSchema,
@@ -13,8 +13,6 @@ import { useForm } from "react-hook-form";
 import { onCompleteUserRegistration } from "@/actions/auth";
 
 export function useSignUpForm() {
-  const { toast } = useToast();
-
   const [loading, setLoading] = useState<boolean>(false);
 
   const { signUp, isLoaded, setActive } = useSignUp();
@@ -46,10 +44,7 @@ export function useSignUpForm() {
 
       onNext((prev) => prev + 1);
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.errors[0].message,
-      });
+      toast.error(error.errors[0].message);
     }
   };
 
@@ -86,17 +81,11 @@ export function useSignUpForm() {
           }
 
           if (registered?.status == 400) {
-            toast({
-              title: "Error",
-              description: "Something went wrong!",
-            });
+            toast.error("Something went wrong!");
           }
         }
       } catch (error: any) {
-        toast({
-          title: "Error",
-          description: error.errors[0].longMessage,
-        });
+        toast.error(error.errors[0].longMessage);
       }
     }
   );

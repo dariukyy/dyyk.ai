@@ -1,5 +1,5 @@
 import { onIntegrateDomain } from "@/actions/settings";
-import { useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { AddDomainSchema } from "@/schemas/settings.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UploadClient } from "@uploadcare/upload-client";
@@ -23,7 +23,6 @@ export const useDomain = () => {
   });
 
   const pathname = usePathname();
-  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(false);
   const [isDomain, setIsDomain] = useState<string | undefined>(undefined);
   const router = useRouter();
@@ -39,10 +38,11 @@ export const useDomain = () => {
     if (domain) {
       reset();
       setLoading(false);
-      toast({
-        title: domain.status == 200 ? "Success" : "Error",
-        description: domain.message,
-      });
+
+      domain.status == 200
+        ? toast.success(domain.message)
+        : toast.error(domain.message);
+
       router.refresh();
     }
   });

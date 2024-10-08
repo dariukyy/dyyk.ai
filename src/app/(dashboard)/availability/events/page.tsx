@@ -1,4 +1,15 @@
 import {
+  onDeleteEventType,
+  onGetAllUserEvents,
+} from "@/actions/appointment/events";
+import { CopyLinkMenuItem } from "@/components/events/CopyLinkMenuItem";
+import EditEventModal from "@/components/events/EditEventModal";
+import { EmptyState } from "@/components/events/EmptyState";
+import { MenuActiveSwitcher } from "@/components/events/EventTypeSwitcher";
+import NewEventModal from "@/components/events/NewEventModal";
+import DeleteModalComponent from "@/components/modal/deleteModal";
+import { Button } from "@/components/ui/button";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -7,20 +18,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { currentUser } from "@clerk/nextjs";
-import { onGetAllUserEvents } from "@/actions/appointment/events";
+import { ExternalLink, Pen, Settings, Users2 } from "lucide-react";
 import Link from "next/link";
-import { ExternalLink, Pen, Settings, Trash, Users2 } from "lucide-react";
-import { EmptyState } from "@/components/events/EmptyState";
-import { CopyLinkMenuItem } from "@/components/events/CopyLinkMenuItem";
-import { MenuActiveSwitcher } from "@/components/events/EventTypeSwitcher";
 
 async function Events() {
   const user = await currentUser();
 
   const events = await onGetAllUserEvents(user?.id as string);
-  console.log(events?.EventType, "EVENT!!!@@@@");
+
   return (
     <>
       <div className="flex items-center justify-between px-2">
@@ -30,9 +36,8 @@ async function Events() {
             Create and manage your event types.
           </p>
         </div>
-        <Button asChild>
-          <Link href="/availability/events/new-event">Create New Event</Link>
-        </Button>
+
+        <NewEventModal />
       </div>
       {events?.EventType.length === 0 ? (
         <EmptyState
@@ -45,7 +50,7 @@ async function Events() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {events?.EventType.map((item) => (
             <div
-              className="overflow-hidden shadow rounded-lg border relative"
+              className="overflow-hidden shadow flex flex-col justify-between rounded-lg border relative"
               key={item.id}
             >
               <div className="absolute top-2 right-2">
@@ -69,53 +74,58 @@ async function Events() {
                         meetingUrl={`${process.env.NEXT_PUBLIC_URL}/${events.fullname}/${item.url}`}
                       />
                       <DropdownMenuItem asChild>
-                        <Link href={`/dashboard/event/${item.id}`}>
-                          <Pen className="mr-2 h-4 w-4" />
-                          <span>Edit</span>
-                        </Link>
+                        <EditEventModal
+                          dropdown={true}
+                          id={item.id}
+                          title={item.title}
+                          description={item.description}
+                          duration={item.duration}
+                          callProvider={item.videoCallSoftware!}
+                          url={item.url}
+                        />
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
-                      <Link href={`/dashboard/event/${item.id}/delete`}>
-                        <Trash className="mr-2 h-4 w-4" />
-                        <span>Delete</span>
-                      </Link>
+                      <DeleteModalComponent
+                        action={onDeleteEventType}
+                        value={item.id}
+                      />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
 
-              <Link href={`/dashboard/event/${item.id}`}>
-                <div className="p-5">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <Users2 className="h-6 w-6" aria-hidden="true" />
-                    </div>
-                    <div className="ml-5 w-0 flex-1">
-                      <dl>
-                        <dt className="text-sm font-medium truncate ">
-                          {item.duration} Minutes Meeting
-                        </dt>
-                        <dd>
-                          <div className="text-lg font-medium ">
-                            {item.title}
-                          </div>
-                        </dd>
-                      </dl>
-                    </div>
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <Users2 className="h-6 w-6" aria-hidden="true" />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium truncate ">
+                        {item.duration} Minutes Meeting
+                      </dt>
+                      <dd>
+                        <div className="text-lg font-medium">{item.title}</div>
+                      </dd>
+                    </dl>
                   </div>
                 </div>
-              </Link>
+              </div>
               <div className="bg-muted dark:bg-gray-900 px-5 py-3 flex justify-between items-center">
                 <MenuActiveSwitcher
                   initialChecked={item.active}
                   eventTypeId={item.id}
                 />
-
-                <Link href={`/dashboard/event/${item.id}`}>
-                  <Button className="">Edit Event</Button>
-                </Link>
+                <EditEventModal
+                  id={item.id}
+                  title={item.title}
+                  description={item.description}
+                  duration={item.duration}
+                  callProvider={item.videoCallSoftware!}
+                  url={item.url}
+                />
               </div>
             </div>
           ))}

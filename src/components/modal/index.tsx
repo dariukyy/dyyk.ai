@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,8 +6,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ArrowBigLeftIcon, ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import React from "react";
 
 type Props = {
   trigger: React.ReactNode;
@@ -26,6 +26,7 @@ const Modal = ({
   description,
   type,
   logo,
+  onClose,
 }: Props) => {
   switch (type) {
     case "Integration":
@@ -69,7 +70,7 @@ const Modal = ({
       return (
         <Dialog>
           <DialogTrigger asChild>{trigger}</DialogTrigger>
-          <DialogContent>
+          <DialogContent className="md:max-w-2xl lg:max-w-4xl">
             <DialogHeader>
               <DialogTitle className="text-xl">{title}</DialogTitle>
               <DialogDescription>{description}</DialogDescription>

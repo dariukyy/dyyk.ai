@@ -4,14 +4,7 @@ import { onCreateEventType } from "@/actions/appointment/events";
 import { SubmitButton } from "@/components/submit-button";
 import { Button } from "@/components/ui/button";
 import ButtonGroup from "@/components/ui/ButtonGroup";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -24,48 +17,54 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import Link from "next/link";
-import { useState } from "react";
-import { useFormState } from "react-dom";
-import { useForm } from "@conform-to/react";
 import { eventTypeSchema } from "@/schemas/event.schema";
+import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { useFormState } from "react-dom";
+import toast from "react-hot-toast";
 
 type VideoCallProvider = "Zoom Meeting" | "Google Meet" | "Microsoft Teams";
 
-function NewEventPage() {
+function NewEventComponent() {
   const [activePlatform, setActivePlatform] =
     useState<VideoCallProvider>("Google Meet");
+
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   const [lastResult, action] = useFormState(onCreateEventType, undefined);
 
   const [form, fields] = useForm({
-    lastResult,
-
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: eventTypeSchema });
     },
 
-    shouldValidate: "onBlur",
+    shouldValidate: "onInput",
     shouldRevalidate: "onInput",
   });
+
+  useEffect(() => {
+    if (closeRef.current && lastResult !== undefined) {
+      closeRef.current.click();
+      toast.success("Event type created successfully!");
+    }
+  }, [lastResult]);
 
   function togglePlatform(platform: VideoCallProvider) {
     setActivePlatform(platform);
   }
 
   return (
-    <div className="w-full h-full flex flex-1 items-center justify-center">
-      <Card>
-        <CardHeader>
-          <CardTitle>Add new appointment type</CardTitle>
-          <CardDescription>
-            Create new appointment type that allows people to book you!
-          </CardDescription>
-        </CardHeader>
-
-        <form id={form.id} onSubmit={form.onSubmit} action={action} noValidate>
-          <CardContent className="grid gap-y-6">
+    <>
+      <div className="w-full h-full flex flex-1 items-center justify-center">
+        <form
+          className="w-full mt-4"
+          id={form.id}
+          onSubmit={form.onSubmit}
+          action={action}
+          noValidate
+        >
+          <div className="grid gap-y-6">
             <div className="flex flex-col gap-y-2">
               <Label htmlFor="title">Title</Label>
               <Input
@@ -175,17 +174,19 @@ function NewEventPage() {
                 {fields.videoCallSoftware.errors}
               </p>
             </div>
-          </CardContent>
-          <CardFooter className="w-full flex justify-between mt-3">
-            <Button variant="secondary" asChild>
-              <Link href="/availability/events">Cancel</Link>
-            </Button>
+          </div>
+          <div className="w-full flex justify-between mt-4">
+            <DialogClose asChild>
+              <Button ref={closeRef} variant="secondary">
+                Close
+              </Button>
+            </DialogClose>
             <SubmitButton text="Create Event Type" />
-          </CardFooter>
+          </div>
         </form>
-      </Card>
-    </div>
+      </div>
+    </>
   );
 }
 
-export default NewEventPage;
+export default NewEventComponent;

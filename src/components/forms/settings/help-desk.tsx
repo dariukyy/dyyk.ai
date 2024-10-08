@@ -11,9 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useHelpDesk } from "@/hooks/settings/use-settings";
-import FormGenerator from "../form-generator";
 import { useState } from "react";
-import Modal from "@/components/modal";
+import FormGenerator from "../form-generator";
 
 function HelpDesk({ id }: { id: string }) {
   const [openEditModal, setIsOpenEditModal] = useState(false);

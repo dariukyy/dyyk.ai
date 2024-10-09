@@ -6,4 +6,5 @@ export const eventTypeSchema = z.object({
   url: z.string().min(3).max(150),
   description: z.string().min(3).max(300),
   videoCallSoftware: z.string().min(3),
+  themeColor: z.string(),
 });

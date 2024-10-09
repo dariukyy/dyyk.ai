@@ -26,6 +26,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import toast from "react-hot-toast";
 import { DialogClose } from "../ui/dialog";
+import { EVENTS_THEME_OPTIONS } from "@/constants/events";
 
 interface EditEventComponent {
   id: string;
@@ -34,7 +35,9 @@ interface EditEventComponent {
   description: string;
   duration: number;
   callProvider: string;
+  themeColor: string;
 }
+type ThemeColor = "#13C38B" | "#F34F4F" | "#4F75F3" | "#FF7D4F";
 
 type Platform = "Zoom Meeting" | "Google Meet" | "Microsoft Teams";
 
@@ -45,8 +48,12 @@ export function EditEventComponent({
   url,
   callProvider,
   id,
+  themeColor,
 }: EditEventComponent) {
   const [lastResult, action] = useFormState(onEditEventType, undefined);
+  const [ThemeColor, setThemeColor] = useState<ThemeColor>(
+    themeColor as ThemeColor
+  );
   const closeRef = useRef<HTMLButtonElement>(null);
 
   const [form, fields] = useForm({
@@ -190,6 +197,32 @@ export function EditEventComponent({
                 Microsoft Teams
               </Button>
             </ButtonGroup>
+          </div>
+          <Label htmlFor="theme">Theme Color</Label>
+          <input
+            type="hidden"
+            name={fields.themeColor.name}
+            value={ThemeColor}
+          />
+          <div className="w-full flex justify-around items-center gap-4 mb-4">
+            {EVENTS_THEME_OPTIONS.map((color, index) => (
+              <Button
+                type="button"
+                id="theme"
+                onClick={() => setThemeColor(color as ThemeColor)}
+                style={{
+                  backgroundColor: color,
+                  height: "2rem",
+                  width: "2rem",
+                }}
+                className={`${
+                  color === ThemeColor
+                    ? ":outline-none ring-2 ring-ring ring-offset-2 "
+                    : ""
+                } rounded-lg`}
+                key={index}
+              />
+            ))}
           </div>
         </div>
         <div className="w-full flex justify-between mt-4">

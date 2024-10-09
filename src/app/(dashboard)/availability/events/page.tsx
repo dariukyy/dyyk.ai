@@ -18,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { hexToRgba } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs";
 import { ExternalLink, Pen, Settings, Users2 } from "lucide-react";
 import Link from "next/link";
@@ -50,7 +51,10 @@ async function Events() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {events?.EventType.map((item) => (
             <div
-              className="overflow-hidden shadow flex flex-col justify-between rounded-lg border relative"
+              className={`overflow-hidden  shadow flex flex-col justify-between rounded-lg border-t-8 relative`}
+              style={{
+                borderColor: hexToRgba(item.themeColor, 0.7),
+              }}
               key={item.id}
             >
               <div className="absolute top-2 right-2">
@@ -75,6 +79,7 @@ async function Events() {
                       />
                       <DropdownMenuItem asChild>
                         <EditEventModal
+                          themeColor={item.themeColor}
                           dropdown={true}
                           id={item.id}
                           title={item.title}
@@ -119,6 +124,7 @@ async function Events() {
                   eventTypeId={item.id}
                 />
                 <EditEventModal
+                  themeColor={item.themeColor}
                   id={item.id}
                   title={item.title}
                   description={item.description}

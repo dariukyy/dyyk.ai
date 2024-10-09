@@ -3,7 +3,6 @@
 import { Pen } from "lucide-react";
 import Modal from "../modal";
 import { Button } from "../ui/button";
-import { DialogClose } from "../ui/dialog";
 import { EditEventComponent } from "./EditEventComponent";
 
 type EditEventModalProps = {
@@ -14,6 +13,7 @@ type EditEventModalProps = {
   duration: number;
   callProvider: string;
   dropdown?: boolean;
+  themeColor: string;
 };
 
 function EditEventModal({
@@ -24,6 +24,7 @@ function EditEventModal({
   duration,
   callProvider,
   dropdown,
+  themeColor,
 }: EditEventModalProps) {
   return (
     <Modal
@@ -41,6 +42,7 @@ function EditEventModal({
       }
     >
       <EditEventComponent
+        themeColor={themeColor}
         id={id}
         title={title}
         url={url}

@@ -3,7 +3,6 @@
 import NewEventComponent from "@/components/events/NewEventComponent";
 import Modal from "../modal";
 import { Button } from "../ui/button";
-import { DialogClose } from "../ui/dialog";
 
 function NewEventModal() {
   return (

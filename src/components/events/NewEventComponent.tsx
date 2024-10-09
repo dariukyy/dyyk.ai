@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { EVENTS_THEME_OPTIONS } from "@/constants/events";
 import { eventTypeSchema } from "@/schemas/event.schema";
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
@@ -25,10 +26,12 @@ import { useFormState } from "react-dom";
 import toast from "react-hot-toast";
 
 type VideoCallProvider = "Zoom Meeting" | "Google Meet" | "Microsoft Teams";
+type ThemeColor = "#13C38B" | "#F34F4F" | "#4F75F3" | "#FF7D4F";
 
 function NewEventComponent() {
   const [activePlatform, setActivePlatform] =
     useState<VideoCallProvider>("Google Meet");
+  const [ThemeColor, setThemeColor] = useState<ThemeColor>("#13C38B");
 
   const closeRef = useRef<HTMLButtonElement>(null);
 
@@ -173,6 +176,32 @@ function NewEventComponent() {
               <p className="text-red-500 text-sm">
                 {fields.videoCallSoftware.errors}
               </p>
+            </div>
+            <Label htmlFor="theme">Theme Color</Label>
+            <input
+              type="hidden"
+              name={fields.themeColor.name}
+              value={ThemeColor}
+            />
+            <div className="w-full flex justify-around items-center gap-4 mb-4">
+              {EVENTS_THEME_OPTIONS.map((color, index) => (
+                <Button
+                  type="button"
+                  id="theme"
+                  onClick={() => setThemeColor(color as ThemeColor)}
+                  style={{
+                    backgroundColor: color,
+                    height: "2rem",
+                    width: "2rem",
+                  }}
+                  className={`${
+                    ThemeColor === color
+                      ? ":outline-none ring-2 ring-ring ring-offset-2 "
+                      : ""
+                  } rounded-lg`}
+                  key={index}
+                />
+              ))}
             </div>
           </div>
           <div className="w-full flex justify-between mt-4">

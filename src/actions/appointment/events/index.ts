@@ -27,6 +27,7 @@ export async function onGetAllUserEvents(clerkId: string) {
             active: true,
             createdAt: true,
             videoCallSoftware: true,
+            themeColor: true,
           },
           orderBy: {
             createdAt: "desc",
@@ -70,6 +71,7 @@ export async function onCreateEventType(prevState: any, formData: FormData) {
       url: submission.value.url,
       description: submission.value.description,
       videoCallSoftware: submission.value.videoCallSoftware,
+      themeColor: submission.value.themeColor,
       userId: userId?.id,
     },
     select: {
@@ -156,6 +158,7 @@ export async function onEditEventType(prevState: any, formData: FormData) {
         url: submission.value.url,
         description: submission.value.description,
         videoCallSoftware: submission.value.videoCallSoftware,
+        themeColor: submission.value.themeColor,
       },
       select: {
         id: true,

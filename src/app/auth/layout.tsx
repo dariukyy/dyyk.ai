@@ -1,5 +1,7 @@
+import { DotPatternDemo } from "@/components/backgrounds/DottPaternBg";
 import { currentUser } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -21,7 +23,9 @@ async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
           width={0}
           height={0}
         />
-        {children}
+        <DotPatternDemo>
+          <div className="z-10 h-full ">{children}</div>
+        </DotPatternDemo>
       </div>
       <div className="hidden lg:flex flex-1 w-full max-h-full max-w-[4000px] overflow-hidden relative bg-cream flex-col pt-10 pl-24 gap-3">
         <h2 className="text-gravel md:text-4xl font-bold">

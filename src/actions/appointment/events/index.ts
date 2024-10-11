@@ -37,7 +37,6 @@ export async function onGetAllUserEvents(clerkId: string) {
     });
 
     if (events) {
-      console.log(events, "EVENT!");
       return events;
     }
   } catch (error) {

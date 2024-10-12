@@ -1,12 +1,20 @@
 "use client";
 import ForgetHighlightBar from "@/components/forget-password/ForgetHighlightBar";
+import OTPForm from "@/components/forms/sign-up/otp-form";
 import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSeparator,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { Label } from "@/components/ui/label";
 import { useAuth, useSignIn } from "@clerk/nextjs";
 import type { NextPage } from "next";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 
 const ForgotPasswordPage: NextPage = () => {
   const [email, setEmail] = useState<string>("");
@@ -49,6 +57,7 @@ const ForgotPasswordPage: NextPage = () => {
       .catch((err) => {
         console.error("error", err.errors[0].longMessage);
         setError(err.errors[0].longMessage);
+        setIsLoading(false);
       });
   }
 
@@ -84,96 +93,153 @@ const ForgotPasswordPage: NextPage = () => {
       .catch((err) => {
         console.error("error", err.errors[0].longMessage);
         setError(err.errors[0].longMessage);
+        setIsLoading(false);
       });
   }
+  //   <h2 className="text-gravel md:text-4xl text-center font-bold">
+  //   Enter OTP
+  // </h2>
+  // <p className="text-muted-foreground text-sm md:text-mds">
+  //   Enter the one time password that was send to your email.
+  // </p>
 
   return (
-    <div className="flex-1 py-36 md:px-16 w-full h-full">
+    <div className="flex-1 px-6 py-36 md:px-16 w-full h-full">
       <div className="flex flex-col h-full gap-3">
         <form
-          className="h-full z-10"
+          className="h-full z-10 "
           onSubmit={!successfulCreation ? create : reset}
         >
           <div className="flex flex-col justify-between gap-3 h-full">
             <div className="flex flex-col gap-4">
-              <h2 className="text-gravel md:text-4xl mb-4 text-center font-bold">
-                Forgot Password?
+              <h2 className="text-gravel text-3xl ,md:text-4xl text-center font-bold mb-4">
+                {successfulCreation
+                  ? "Reset Your Password"
+                  : "Forgot Password?"}
               </h2>
               {!successfulCreation && (
                 <>
-                  <p className="text-sm text-muted-foreground">
-                    Please enter your email address below, and we&aposs;ll send
-                    you a code to reset your password.
+                  <p className="text-muted-foreground text-sm md:text-md">
+                    Enter your email address below, and we&apos;ll send you a
+                    code to reset your password.
                   </p>
                   <div className="flex flex-col gap-3">
                     <Label htmlFor="email">Email Address</Label>
                     <Input
-                      className="rounded-lg"
+                      className="rounded-lg shadow-md"
                       id="email"
                       type="email"
+                      disabled={loading}
                       placeholder="e.g john@doe.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
 
+                    {error && (
+                      <p className="text-sm text-red-600 dark:text-red-500">
+                        {error.replace(".", "")}
+                      </p>
+                    )}
                     <SubmitButton
                       loadingText="Sending Code..."
                       variant="default"
                       loading={loading}
                       className={`${
-                        loading ? "bg-primary/50 w-full" : "w-full"
+                        loading
+                          ? "bg-platinum w-full mt-3 shadow-md"
+                          : "w-full mt-3 shadow-md"
                       }`}
                       text="Continue"
                     />
-                    {error && (
-                      <p className="text-sm text-red-600 dark:text-red-500">
-                        {error}
-                      </p>
-                    )}
+                    <div className="text-sm self-end leading-5">
+                      <Link
+                        href="/auth/sign-in"
+                        className="font-bold text-md tracking-wide text-primary mt-4"
+                      >
+                        Return to Login
+                      </Link>
+                    </div>
                   </div>
                 </>
               )}
 
               {successfulCreation && (
                 <>
-                  <p className="text-sm text-muted-foreground">
-                    Enter the reset code you received via email, along with your
-                    new password, to update your account.
+                  <p className="text-muted-foreground text-sm md:text-md">
+                    Enter the code from your email and your new password to
+                    update your account.
                   </p>
                   <div className="flex flex-col gap-3">
                     <Label htmlFor="password">Enter your new password</Label>
                     <Input
+                      disabled={loading}
                       className="rounded-lg"
                       id="password"
                       type="password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
-
-                    <Label htmlFor="code">
-                      Enter the password reset code that was sent to your email
+                    <Label htmlFor="code" className="mt-2">
+                      Enter the one time password that was send to your email
                     </Label>
-                    <Input
+                    {/* <Input
                       className="rounded-lg"
                       id="code"
                       type="text"
                       value={code}
-                      onChange={(e) => setCode(e.target.value)}
-                    />
+                      onChange={(e) => {
+                        console.log(e.target);
+                        setCode(e.target.value);
+                      }}
+                    /> */}
+                    {/* <OTPForm
+                      onAuth={true}
+                      onOTP={code}
+                      setOTP={(e: any) => setCode(e.target.value)}
+                    /> */}
+                    <InputOTP
+                      maxLength={6}
+                      value={code}
+                      onChange={(value) => setCode(value)}
+                    >
+                      <div className="flex items-center w-full justify-evenly">
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                        </InputOTPGroup>
+                        <InputOTPSeparator />
 
+                        <InputOTPGroup>
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </div>
+                    </InputOTP>
+                    {error && (
+                      <p className="text-sm text-red-600 dark:text-red-500">
+                        {error.replace(".", "")}
+                      </p>
+                    )}
                     <SubmitButton
                       loadingText="Resetting Password..."
                       text="Reset Password"
                       loading={loading}
-                      className={`${
-                        loading ? "bg-primary/50 w-full" : "w-full"
+                      className={`mt-3 ${
+                        loading
+                          ? "bg-platinum w-full shadow-md"
+                          : "w-full shadow-md mt-3"
                       }`}
                     />
-                    {error && (
-                      <p className="text-sm text-red-600 dark:text-red-500">
-                        {error}
-                      </p>
-                    )}
+                    <div className="text-sm self-end leading-5">
+                      <Link
+                        href="/auth/sign-in"
+                        className="font-bold text-md tracking-wide text-primary mt-4"
+                      >
+                        Return to Login
+                      </Link>
+                    </div>
                   </div>
                 </>
               )}
@@ -184,7 +250,9 @@ const ForgotPasswordPage: NextPage = () => {
                 </p>
               )}
             </div>
-            <ForgetHighlightBar successfulCreation={successfulCreation} />
+            <div>
+              <ForgetHighlightBar successfulCreation={successfulCreation} />
+            </div>
           </div>
         </form>
       </div>

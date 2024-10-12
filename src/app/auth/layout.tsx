@@ -11,8 +11,10 @@ async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
 
   return (
     <div className="h-screen flex w-full justify-center">
-      <div className="w-[600px] ld:w-full flex flex-col items-start p-6">
+      <div className="w-full lg:w-[600px] flex items-start justify-center relative">
+        <DotPatternDemo />
         <Image
+          className="bg-transparent  absolute top-6 left-6 z-10"
           src="/images/logo.png"
           alt="LOGO"
           sizes="100vw"
@@ -23,9 +25,8 @@ async function Layout({ children }: Readonly<{ children: React.ReactNode }>) {
           width={0}
           height={0}
         />
-        <DotPatternDemo>
-          <div className="z-10 h-full ">{children}</div>
-        </DotPatternDemo>
+
+        <div className="z-10 h-full w-[600px] p-6">{children}</div>
       </div>
       <div className="hidden lg:flex flex-1 w-full max-h-full max-w-[4000px] overflow-hidden relative bg-cream flex-col pt-10 pl-24 gap-3">
         <h2 className="text-gravel md:text-4xl font-bold">

@@ -7,7 +7,7 @@ import RegistrationFormStep from "@/components/forms/sign-up/registration-step";
 
 function SignUp() {
   return (
-    <div className="flex-1 py-36 md:px-16 w-full h-full">
+    <div className="px-6 flex-1 py-36 md:px-16 w-full h-full">
       <div className="flex flex-col h-full gap-3">
         <SignUpFormProvider>
           <div className="flex flex-col gap-3">

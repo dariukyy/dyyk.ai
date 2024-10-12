@@ -18,6 +18,7 @@ type Props = {
   lines?: number;
   form?: string;
   defaultValue?: string;
+  noAutocomplete?: boolean;
 };
 
 const FormGenerator = ({
@@ -32,6 +33,7 @@ const FormGenerator = ({
   label,
   lines,
   options,
+  noAutocomplete,
 }: Props) => {
   switch (inputType) {
     case "input":
@@ -40,12 +42,14 @@ const FormGenerator = ({
         <Label className="flex flex-col gap-2" htmlFor={`input-${label}`}>
           {label && label}
           <Input
+            className="shadow-md"
             id={`input-${label}`}
             type={type}
             placeholder={placeholder}
             form={form}
             defaultValue={defaultValue}
             {...register(name)}
+            autoComplete={noAutocomplete ? "off webauthn" : "on"}
           />
           <ErrorMessage
             errors={errors}

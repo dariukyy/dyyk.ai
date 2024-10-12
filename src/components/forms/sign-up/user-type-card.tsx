@@ -28,7 +28,7 @@ function UserTypeCard({
     <Label htmlFor={value}>
       <Card
         className={cn(
-          "w-full cursor-pointer",
+          "w-full cursor-pointer bg-card shadow-md mb-2",
           userType == value && "border-orange"
         )}
       >
@@ -47,7 +47,7 @@ function UserTypeCard({
                 )}
               />
             </Card>
-            <div className="">
+            <div>
               <CardDescription className="text-iridium">
                 {title}
               </CardDescription>

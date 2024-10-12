@@ -20,12 +20,15 @@ const ButtonHandler = (props: Props) => {
   if (currentStep === 3) {
     return (
       <div className="w-full flex flex-col gap-3 items-center">
-        <Button type="submit" className="w-full">
-          Create an account
+        <Button type="submit" className="w-full shadow-md">
+          Create account
         </Button>
-        <p>
+        <p className="text-muted-foreground text-sm md:text-md mt-2">
           Already have an account?
-          <Link href="/auth/sign-in" className="font-bold">
+          <Link
+            href="/auth/sign-in"
+            className="tracking-wide font-bold text-primary text-md pl-2"
+          >
             Sign In
           </Link>
         </p>
@@ -38,7 +41,7 @@ const ButtonHandler = (props: Props) => {
       <div className="w-full flex flex-col gap-3 items-center">
         <Button
           type="submit"
-          className="w-full"
+          className="w-full shadow-md mt-2"
           {...(isName &&
             isEmail &&
             isPassword && {
@@ -52,9 +55,12 @@ const ButtonHandler = (props: Props) => {
         >
           Continue
         </Button>
-        <p>
-          Already have an account?{" "}
-          <Link href="/auth/sign-in" className="font-bold">
+        <p className="text-muted-foreground text-sm md:text-md">
+          Already have an account?
+          <Link
+            href="/auth/sign-in"
+            className="tracking-wide font-bold text-primary text-md pl-2"
+          >
             Sign In
           </Link>
         </p>
@@ -66,14 +72,17 @@ const ButtonHandler = (props: Props) => {
     <div className="w-full flex flex-col gap-3 items-center">
       <Button
         type="submit"
-        className="w-full"
+        className="w-full shadow-md"
         onClick={() => setCurrentStep((prev: number) => prev + 1)}
       >
         Continue
       </Button>
-      <p>
-        Already have an account?{" "}
-        <Link href="/auth/sign-in" className="font-bold">
+      <p className="text-muted-foreground text-sm md:text-md mt-2">
+        Already have an account?
+        <Link
+          href="/auth/sign-in"
+          className="tracking-wide font-bold text-primary text-md pl-2"
+        >
           Sign In
         </Link>
       </p>

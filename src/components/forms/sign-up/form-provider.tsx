@@ -15,11 +15,12 @@ function SignUpFormProvider({ children }: SignUpFormProviderProps) {
   return (
     <AuthContextProvider>
       <FormProvider {...methods}>
-        <form onSubmit={onHandleSubmit} className="h-full">
-          <div className="flex flex-col justify-between gap-3 h-full">
+        <form onSubmit={onHandleSubmit} className="h-full z-10">
+          <div className="flex flex-col justify-between gap-6 h-full">
             <Loader loading={loading}>{children}</Loader>
           </div>
         </form>
+        <div></div>
       </FormProvider>
     </AuthContextProvider>
   );

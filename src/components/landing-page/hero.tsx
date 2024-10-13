@@ -2,12 +2,10 @@
 
 import { motion } from "framer-motion";
 
-import { Icons } from "./icons";
-import HeroVideoDialog from "../ui/hero-video-dialog";
-import { buttonVariants } from "../ui/button";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+import HeroVideoDialog from "../ui/hero-video-dialog";
 import { RainbowButton } from "../ui/rainbow-button";
+import { Icons } from "./icons";
 
 const ease = [0.16, 1, 0.3, 1];
 

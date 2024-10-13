@@ -6,6 +6,7 @@ import Link from "next/link";
 import HeroVideoDialog from "../ui/hero-video-dialog";
 import { RainbowButton } from "../ui/rainbow-button";
 import { Icons } from "./icons";
+import { currentUser, useAuth } from "@clerk/nextjs";
 
 const ease = [0.16, 1, 0.3, 1];
 
@@ -78,6 +79,8 @@ function HeroTitles() {
 }
 
 function HeroCTA() {
+  const { userId } = useAuth();
+
   return (
     <>
       <motion.div
@@ -86,12 +89,18 @@ function HeroCTA() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8, duration: 0.8, ease }}
       >
-        <Link href="/auth/sign-up">
+        <Link
+          href={`${
+            userId === null || undefined ? "/auth/sign-up" : "/dashboard"
+          }`}
+        >
           <RainbowButton
             className={"flex w-full gap-2 text-background sm:w-auto bg-primary"}
           >
             <Icons.logo className="size-6" />
-            Get started for free
+            {userId === null || undefined
+              ? "Get started for free"
+              : "Go To Dashboard"}
           </RainbowButton>
         </Link>
       </motion.div>

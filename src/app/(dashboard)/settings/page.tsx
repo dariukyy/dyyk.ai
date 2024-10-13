@@ -2,6 +2,7 @@ import InfoBar from "@/components/infobar";
 import BillingSettings from "@/components/settings/billing-settings";
 import ChangePassword from "@/components/settings/change-password";
 import DarkModetoggle from "@/components/settings/dark-mode";
+import HeroVideoDialog from "@/components/ui/hero-video-dialog";
 
 function Settings() {
   return (

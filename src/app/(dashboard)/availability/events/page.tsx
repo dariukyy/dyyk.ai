@@ -51,7 +51,7 @@ async function Events() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {events?.EventType.map((item) => (
             <div
-              className={`overflow-hidden  shadow flex flex-col justify-between rounded-lg border-t-8 relative`}
+              className={`overflow-hidden bg-card shadow flex flex-col justify-between rounded-lg border-t-8 relative`}
               style={{
                 borderColor: hexToRgba(item.themeColor, 0.7),
               }}
@@ -118,7 +118,7 @@ async function Events() {
                   </div>
                 </div>
               </div>
-              <div className="bg-muted dark:bg-gray-900 px-5 py-3 flex justify-between items-center">
+              <div className="bg-muted px-5 py-3 flex justify-between items-center">
                 <MenuActiveSwitcher
                   initialChecked={item.active}
                   eventTypeId={item.id}

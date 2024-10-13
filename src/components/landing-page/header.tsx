@@ -1,16 +1,18 @@
 "use client";
 
+import { siteConfig } from "@/lib/config";
+import { cn } from "@/lib/utils";
+import { SignOutButton, useAuth } from "@clerk/nextjs";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { Button, buttonVariants } from "../ui/button";
 import Drawer from "./drawer";
 import { Icons } from "./icons";
 import Menu from "./menu";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { siteConfig } from "@/lib/config";
-import { buttonVariants } from "../ui/button";
-import { cn } from "@/lib/utils";
 
 export default function Header() {
   const [addBorder, setAddBorder] = useState(false);
+  const { userId } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,21 +49,32 @@ export default function Header() {
             </nav>
 
             <div className="flex gap-2">
+              {userId === null || undefined ? (
+                <Link
+                  href="/auth/sign-in"
+                  className={buttonVariants({ variant: "outline" })}
+                >
+                  Login
+                </Link>
+              ) : (
+                <SignOutButton>
+                  <Button variant="outline">Signout</Button>
+                </SignOutButton>
+              )}
+
               <Link
-                href="/auth/sign-in"
-                className={buttonVariants({ variant: "outline" })}
-              >
-                Login
-              </Link>
-              <Link
-                href="auth//sign-up"
+                href={`${
+                  userId === null || undefined ? "/auth/sign-up" : "/dashboard"
+                } `}
                 className={cn(
                   buttonVariants({ variant: "default" }),
                   "flex w-full gap-2 text-background sm:w-auto"
                 )}
               >
                 <Icons.logo className="size-6" />
-                Get Started for Free
+                {userId === null || undefined
+                  ? `Get Started for Free`
+                  : "Dashboard"}
               </Link>
             </div>
           </div>
